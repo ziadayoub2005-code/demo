@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  
+  --font-cairo: 'Cairo', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-cairo), var(--font-outfit), system-ui, sans-serif;
+  --font-heading: var(--font-outfit), var(--font-cairo), system-ui, sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a1a1a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333333;
+}
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: var(--font-cairo), var(--font-outfit), sans-serif;
+  overflow-x: hidden;
+  letter-spacing: -0.01em;
+}
+
+/* Premium Minimalist Card Design */
+.menu-card {
+  background-color: #050505;
+  border: 1px solid #141414;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.menu-card-hover:hover {
+  border-color: #ffffff !important;
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(255, 255, 255, 0.04);
+}
+
+/* Beautiful Shimmer Light Sweep on Hover */
+.shimmer-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  transform: translateX(-100%) skewX(-20deg);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.group:hover .shimmer-line {
+  animation: sweep 1.0s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.menu-card-image-wrap {
+  position: relative;
+  overflow: hidden;
+  height: 200px;
+  width: 100%;
+  border-bottom: 1px solid #141414;
+}
+
+.menu-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.menu-card:hover .menu-card-image {
+  transform: scale(1.04);
+}
+
+/* Decorative Dotted Grid for Premium Tech-Brutalist look */
+.bg-grid-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Keyframes for subtle animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sweep {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  30% {
+    transform: translateX(100%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(100%) skewX(-15deg);
+  }
+}
+
+.animate-slideup {
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fadein {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* RTL layout helpers */
+html[dir="rtl"] {
+  font-family: var(--font-cairo), sans-serif;
+}
