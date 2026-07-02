@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { MenuItem } from "@/data/menuData";
 
 interface ItemModalProps {
@@ -12,10 +12,26 @@ interface ItemModalProps {
 
 export default function ItemModal({ item, isOpen, onClose, lang }: ItemModalProps) {
   const isRtl = lang === "ar";
+  const [renderItem, setRenderItem] = useState<MenuItem | null>(item);
+  const [isClosing, setIsClosing] = useState(!isOpen);
+
+  // Sync state for exit animation
+  useEffect(() => {
+    if (isOpen && item) {
+      setRenderItem(item);
+      setIsClosing(false);
+    } else if (!isOpen && renderItem) {
+      setIsClosing(true);
+      const timer = setTimeout(() => {
+        setRenderItem(null);
+      }, 400); // 400ms to match exit transition
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, item, renderItem]);
 
   // Prevent background scrolling when modal is open
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !isClosing) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
@@ -23,23 +39,23 @@ export default function ItemModal({ item, isOpen, onClose, lang }: ItemModalProp
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [isOpen]);
+  }, [isOpen, isClosing]);
 
-  if (!isOpen || !item) return null;
+  if (!renderItem) return null;
 
-  const displayName = lang === "ar" ? item.name : item.nameEn;
-  const displayDescription = lang === "ar" ? item.description : item.descriptionEn;
-  const displayIngredients = lang === "ar" ? item.ingredients : item.ingredientsEn;
-  const displayOptions = item.options;
+  const displayName = lang === "ar" ? renderItem.name : renderItem.nameEn;
+  const displayDescription = lang === "ar" ? renderItem.description : renderItem.descriptionEn;
+  const displayIngredients = lang === "ar" ? renderItem.ingredients : renderItem.ingredientsEn;
+  const displayOptions = renderItem.options; // use renderItem instead of item
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md animate-fadein"
+      className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md ${isClosing ? 'animate-fadeout' : 'animate-fadein'}`}
       onClick={onClose}
       id="item-details-modal-overlay"
     >
       <div
-        className="relative w-full max-w-lg bg-neutral-950 border-t sm:border border-neutral-800 rounded-t-3xl sm:rounded-2xl max-h-[85vh] sm:max-h-none overflow-y-auto sm:overflow-visible shadow-[0_0_50px_rgba(255,255,255,0.06)] animate-slideup p-6 sm:p-8"
+        className={`relative w-full max-w-lg bg-neutral-950 border-t sm:border border-neutral-800 rounded-t-3xl sm:rounded-2xl max-h-[85vh] sm:max-h-none overflow-y-auto sm:overflow-visible shadow-[0_0_50px_rgba(255,255,255,0.06)] p-6 sm:p-8 ${isClosing ? 'animate-slidedown' : 'animate-slideup'}`}
         onClick={(e) => e.stopPropagation()}
         style={{ direction: isRtl ? "rtl" : "ltr" }}
         id="item-details-modal"
@@ -68,7 +84,7 @@ export default function ItemModal({ item, isOpen, onClose, lang }: ItemModalProp
         {/* Category Tag */}
         <div className="mb-2 mt-2 sm:mt-4">
           <span className="text-[10px] font-black uppercase tracking-widest text-neutral-500 border border-neutral-900 px-2.5 py-1 rounded bg-neutral-950">
-            {item.category}
+            {renderItem.category}
           </span>
         </div>
 

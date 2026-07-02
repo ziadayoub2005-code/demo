@@ -12,10 +12,10 @@ export interface MenuItem {
     items: {
       name: string;
       nameEn: string;
-      price?: string;
+      price?: number;
     }[];
   };
-  price?: string;
+  price: number; 
   category: string;
   image?: string;
 }
@@ -29,203 +29,199 @@ export interface Category {
 
 export const categories: Category[] = [
   { id: "burgers", name: "البرغر", nameEn: "Burgers" },
-  { id: "mega-burgers", name: "ميقا برغر", nameEn: "Mega Burgers" },
+  { id: "mega", name: "ميقا", nameEn: "Mega" },
   { id: "buckets", name: "سطل اللمة", nameEn: "Gathering Buckets" },
   { id: "boxes", name: "البوكسات", nameEn: "Boxes" },
   { id: "bites", name: "كرسبي بايتس", nameEn: "Crispy Bites" },
   { id: "pasta", name: "الباستا", nameEn: "Pasta" },
   { id: "sauces", name: "الصوصات", nameEn: "Sauces" },
-  { id: "sides", name: "الإضافات", nameEn: "Sides" },
-  { id: "drinks", name: "المشروبات", nameEn: "Drinks" },
-  { id: "desserts", name: "الحلا", nameEn: "Desserts" }
+  { id: "extras", name: "الاضافات", nameEn: "Extras" },
+  { id: "drinks", name: "مشروبات", nameEn: "Drinks" },
+  { id: "desserts", name: "حلا", nameEn: "Desserts" }
 ];
 
 export const menuItems: MenuItem[] = [
-  // --- MEGA BURGERS ---
-  {
-    id: "mega-crispy-chicken",
-    name: "ميقا كرسبي شكن",
-    nameEn: "Mega Crispy Chicken",
-    description: "الحجم الكبير والمضاعف من الدجاج المقرمش مع شريحتين جبن وصوص كوكتال.",
-    descriptionEn: "The double large size of crispy chicken with two cheese slices and cocktail sauce.",
-    ingredients: ["دجاج كرسبي دبل", "خص طازج", "صوص كوكتال", "شريحتين جبن شيدار"],
-    ingredientsEn: ["Double crispy chicken", "Fresh lettuce", "Cocktail sauce", "2 Cheddar cheese slices"],
-    category: "mega-burgers",
-    image: "/images/mega_crispy.png"
-  },
-  {
-    id: "mega-truffle",
-    name: "ميقا ترافل",
-    nameEn: "Mega Truffle",
-    description: "شريحتين من اللحم الفاخر بوزن 180 غرام مع صوص الترافل الفاخر والجبن المزدوج.",
-    descriptionEn: "Two premium beef patties (180g) with luxurious truffle sauce and double cheese.",
-    ingredients: ["شريحتين لحم 180 غ", "خص طازج", "صوص ترافل", "شريحتين جبن شيدار"],
-    ingredientsEn: ["2 Beef patties 180g", "Fresh lettuce", "Truffle sauce", "2 Cheddar cheese slices"],
-    category: "mega-burgers",
-    image: "/images/mega_truffle.png"
-  },
-  {
-    id: "mega-black-white",
-    name: "ميقا بلاك وايت",
-    nameEn: "Mega Black White",
-    description: "برغر الميقا الأضخم بشريحتين لحم 240 غرام مع ثلاث شرائح جبنة شيدر غنية.",
-    descriptionEn: "The largest mega burger with two 240g beef patties and three rich cheddar cheese slices.",
-    ingredients: ["شريحتين لحم 240 غ", "خص طازج", "صوص بيجي", "ثلاث شرائح جبن شيدار"],
-    ingredientsEn: ["2 Beef patties 240g", "Fresh lettuce", "Biggie sauce", "3 Cheddar cheese slices"],
-    category: "mega-burgers",
-    image: "/images/mega_black_white.png"
-  },
-
   // --- BURGERS ---
   {
     id: "burger-truffle",
     name: "ترافل",
-    nameEn: "Truffle Burger",
+    nameEn: "Truffle",
     category: "burgers",
+    price: 45,
     ingredients: ["شريحة لحم 90 غ", "خص طازج", "صوص ترافل", "شريحة جبن شيدار"],
     ingredientsEn: ["90g Beef Patty", "Fresh Lettuce", "Truffle Sauce", "Cheddar Cheese Slice"],
-    description: "شريحة لحم فاخرة 90 غرام مع صوص الترافل الغني والجبن السويسري اللذيذ.",
-    descriptionEn: "Premium 90g beef patty with rich truffle sauce and delicious melted cheddar cheese.",
-    image: "/images/burger_truffle_chalk.png"
+    image: "/images/export/ترافل برغر.png"
   },
   {
     id: "burger-mexican",
     name: "مكسيكان",
-    nameEn: "Mexican Burger",
+    nameEn: "Mexican",
     category: "burgers",
+    price: 38,
     ingredients: ["شريحة لحم 90 غ", "خص طازج", "صوص مكسيكان سبايسي", "شريحة جبن شيدار"],
     ingredientsEn: ["90g Beef Patty", "Fresh Lettuce", "Spicy Mexican Sauce", "Cheddar Cheese Slice"],
-    description: "شريحة لحم 90 غرام مع صوص مكسيكان حار ولذيذ لعشاق النكهات السبايسي.",
-    descriptionEn: "Spicy 90g beef patty with hot Mexican sauce, fresh lettuce, and cheddar cheese.",
-    image: "/images/burger_mexican_chalk.png"
+    image: "/images/export/مكسيكان برغر.png"
   },
   {
     id: "burger-crispy-chicken",
     name: "كرسبي شكن",
     nameEn: "Crispy Chicken",
     category: "burgers",
+    price: 36,
     ingredients: ["دجاج مقرمش", "خص طازج", "صوص كوكتال", "شريحة جبن شيدار"],
     ingredientsEn: ["Crispy Chicken", "Fresh Lettuce", "Cocktail Sauce", "Cheddar Cheese Slice"],
-    description: "صدر دجاج مقرمش وذهبي مع صوص الكوكتيل المميز والجبن الشيدر.",
-    descriptionEn: "Crispy golden chicken breast with special cocktail sauce and cheddar cheese.",
-    image: "/crispy-chicken.png"
+    image: "/images/export/كرسبي شكن برغر.png"
   },
   {
     id: "burger-classica",
     name: "كلاسيكا",
-    nameEn: "Classica Burger",
+    nameEn: "Classica",
     category: "burgers",
+    price: 35,
     ingredients: ["شريحة لحم 90 غ", "خص طازج", "صوص بيجي", "شريحة جبن شيدار"],
     ingredientsEn: ["90g Beef Patty", "Fresh Lettuce", "Biggy Sauce", "Cheddar Cheese Slice"],
-    description: "برغر اللحم الكلاسيكي المحضر بالطريقة التقليدية مع صوص بيجي اللذيذ.",
-    descriptionEn: "Classic beef burger prepared traditionally with tasty Biggy sauce.",
-    image: "/classica-burger.png"
+    image: "/images/export/كلاسيكا برغر.png"
   },
   {
     id: "burger-black-white",
     name: "بلاك وايت",
-    nameEn: "Black White Burger",
+    nameEn: "Black White",
     category: "burgers",
+    price: 55,
     ingredients: ["شريحة لحم 120 غ", "خص طازج", "صوص بيجي", "شريحتين جبن شيدار"],
     ingredientsEn: ["120g Beef Patty", "Fresh Lettuce", "Biggy Sauce", "Two Cheddar Cheese Slices"],
-    description: "برغر مميز بشريحة لحم سميكة 120 غرام مع شريحتين من جبن الشيدر الغني.",
-    descriptionEn: "Special burger with a thick 120g beef patty and double cheddar cheese.",
-    image: "/images/burger_black_white_chalk.png"
+    image: "/images/export (3)/بلاك وايت (Black White).png"
   },
   {
     id: "burger-crispy-shrimp",
     name: "جمبري كرسبي",
-    nameEn: "Crispy Shrimp Burger",
+    nameEn: "Crispy Shrimp",
     category: "burgers",
+    price: 40,
     ingredients: ["جمبري مقرمش", "أفوكادو", "خص طازج", "بصل مخلل", "صوص بيجي", "جبن شيدار"],
-    ingredientsEn: ["Crispy Shrimp", "Avocado", "Fresh Lettuce", "Pickled Onion", "Biggy Sauce", "Cheddar Cheese"],
-    description: "جمبري مقرمش ومبهر مع قطع الأفوكادو الطازجة، البصل المخلل، وجبن الشيدر السائل.",
-    descriptionEn: "Crispy seasoned shrimp with fresh avocado slices, pickled onions, and cheddar cheese.",
-    image: "/crispy-shrimp.png"
+    ingredientsEn: ["Crispy Shrimp", "Avocado", "Fresh Lettuce", "Pickled Onions", "Biggy Sauce", "Cheddar Cheese"],
+    image: "/images/export (3)/جمبري كرسبي (Crispy Shrimp).png"
+  },
+  {
+    id: "burger-mega-crispy-chicken",
+    name: "ميقا كرسبي شكن",
+    nameEn: "Mega Crispy Chicken",
+    category: "mega",
+    price: 48,
+    ingredients: ["دجاج كرسبي دبل", "خص طازج", "صوص كوكتال", "شريحتين جبن شيدار"],
+    ingredientsEn: ["Double Crispy Chicken", "Fresh Lettuce", "Cocktail Sauce", "Two Cheddar Cheese Slices"],
+    image: "/images/export (2)/Mega Crispy Chicken.png"
+  },
+  {
+    id: "burger-mega-truffle",
+    name: "ميقا ترافل",
+    nameEn: "Mega Truffle",
+    category: "mega",
+    price: 65,
+    ingredients: ["شريحتين لحم 180 غ", "خص طازج", "صوص ترافل", "شريحتين جبن شيدار"],
+    ingredientsEn: ["Two 180g Beef Patties", "Fresh Lettuce", "Truffle Sauce", "Two Cheddar Cheese Slices"],
+    image: "/images/export (2)/Mega Truffle.png"
+  },
+  {
+    id: "burger-mega-black-white",
+    name: "ميقا بلاك وايت",
+    nameEn: "Mega Black White",
+    category: "mega",
+    price: 75,
+    ingredients: ["شريحتين لحم 240 غ", "خص طازج", "صوص بيجي", "ثلاث شرايح جبن شيدار"],
+    ingredientsEn: ["Two 240g Beef Patties", "Fresh Lettuce", "Biggy Sauce", "Three Cheddar Cheese Slices"],
+    image: "/images/export (2)/Mega Black White.png"
   },
 
-
-  // --- GATHERING BUCKETS ---
+  // --- BUCKETS ---
   {
     id: "bucket-nuggets",
     name: "سطل نيوغتس فرايز",
     nameEn: "Nuggets Fries Bucket",
     category: "buckets",
-    description: "نيوغتس مقرمش مع بطاطس مطلي بصوص الجبن الإيطالية وصوص الشيدار.",
-    descriptionEn: "Crispy nuggets and French fries smothered in Italian cheese sauce and cheddar cheese sauce.",
-    image: "/bucket-nuggets.png"
+    price: 50,
+    description: "نيوغتس مقرمش مع بطاطس مطلي بصوص الجبن الإيطالية وصوص الشيدار",
+    descriptionEn: "Crispy nuggets with fries coated in Italian cheese sauce and cheddar sauce",
+    image: "/images/export (2)/Nuggets Fries Bucket.png"
   },
   {
     id: "bucket-shrimp",
     name: "سطل الجمبري فرايز",
     nameEn: "Shrimp Fries Bucket",
     category: "buckets",
-    description: "جمبري مقرمش مع بطاطس مطلي بصوص الجبن الإيطالية وصوص الشيدار.",
-    descriptionEn: "Crispy shrimp and French fries smothered in Italian cheese sauce and cheddar cheese sauce.",
-    image: "/bucket-shrimp.png"
+    price: 65,
+    description: "جمبري مقرمش + بطاطس مطلي بصوص الجبن الإيطالية وصوص الشيدار",
+    descriptionEn: "Crispy shrimp + fries coated in Italian cheese sauce and cheddar sauce",
+    image: "/images/export (2)/Shrimp Fries Bucket.png"
   },
   {
     id: "bucket-steak",
     name: "سطل ستيك فرايز",
     nameEn: "Steak Fries Bucket",
     category: "buckets",
-    description: "لحم مشوي مع بطاطس مطلي بصوص الجبن الإيطالية وصوص الشيدار.",
-    descriptionEn: "Grilled steak slices and French fries smothered in Italian cheese sauce and cheddar cheese sauce.",
-    image: "/bucket-steak.png"
+    price: 70,
+    description: "لحم مشوي+ بطاطس مطلي بصوص الجبن الإيطالية وصوص الشيدار",
+    descriptionEn: "Grilled steak + fries coated in Italian cheese sauce and cheddar sauce",
+    image: "/images/export (1)/سطل ستيك فرايز.png"
   },
   {
     id: "bucket-chicken",
     name: "سطل شكن فرايز",
     nameEn: "Chicken Fries Bucket",
     category: "buckets",
-    description: "صدور دجاج مقرمش مع بطاطس مطلي بصوص الجبن الإيطالية وصوص الشيدار.",
-    descriptionEn: "Crispy chicken breast chunks and French fries smothered in Italian cheese sauce and cheddar cheese sauce.",
-    image: "/bucket-chicken.png"
+    price: 55,
+    description: "صدور دجاج مقرمش مع بطاطس مطلي بصوص الجبن الإيطالية وصوص الشيدار",
+    descriptionEn: "Crispy chicken breasts with fries coated in Italian cheese sauce and cheddar sauce",
+    image: "/images/export (1)/سطل شكن فرايز.png"
   },
 
   // --- BOXES ---
   {
     id: "box-twin-classica",
     name: "توين كلاسيكا",
-    nameEn: "Twin Classica Box",
+    nameEn: "Twin Classica",
     category: "boxes",
-    description: "اثنين لحم مع صوص جانبي.",
-    descriptionEn: "Two classic beef burgers served with a side sauce of your choice.",
-    image: "/box-twin-classica.png"
+    price: 60,
+    description: "اثنين لحم مع صوص جانبي",
+    descriptionEn: "Two beef burgers with side sauce",
+    image: "/images/export (1)/توين كلاسيكا.png"
   },
   {
-    id: "box-twin-crispy",
+    id: "box-twin-chicken",
     name: "توين كرسبي شكن",
-    nameEn: "Twin Crispy Chicken Box",
+    nameEn: "Twin Crispy Chicken",
     category: "boxes",
-    description: "اثنين برغر دجاج مقرمش مع صوص جانبي.",
-    descriptionEn: "Two crispy chicken burgers served with a side sauce of your choice.",
-    image: "/box-twin-crispy.png"
+    price: 60,
+    description: "اثنين برغر دجاج مقرمش مع صوص جانبي",
+    descriptionEn: "Two crispy chicken burgers with side sauce",
+    image: "/images/export (1)/توين كرسبي شكن.png"
   },
   {
     id: "box-twin-mix",
     name: "توين مكس",
-    nameEn: "Twin Mix Box",
+    nameEn: "Twin Mix",
     category: "boxes",
-    description: "برغر دجاج مقرمش مع برغر لحم مشوي مع صوص جانبي.",
-    descriptionEn: "One crispy chicken burger and one grilled beef burger served with a side sauce.",
-    image: "/box-twin-mix.png"
+    price: 60,
+    description: "برغر دجاج مقرمش مع برغر لحم مشوي مع صوص جانبي",
+    descriptionEn: "Crispy chicken burger with grilled beef burger and side sauce",
+    image: "/images/export (1)/توين مكس.png"
   },
   {
     id: "box-mini-mix",
     name: "ميني مكس بوكس",
     nameEn: "Mini Mix Box",
     category: "boxes",
-    description: "بوكس ميني برغر مشكل من اللحم والدجاج المقرمش تقدم مع صوص جانبي.",
-    descriptionEn: "Assorted box of mini beef and crispy chicken burgers served with a side sauce.",
-    image: "/box-mini-mix.png",
+    price: 80,
+    description: "ميني برجر باللحم + ميني برجر بالدجاج المقرمش تقدم مع صوص جانبي",
+    descriptionEn: "Mini Beef Burgers + Mini Crispy Chicken Burgers with side sauce",
+    image: "/images/export (3)/ميني مكس بوكس (Mini Mix Box).png",
     options: {
-      label: "اختر حجم البوكس",
-      labelEn: "Select Box Size",
+      label: "اختر العدد",
+      labelEn: "Choose Quantity",
       items: [
-        { name: "6 ميني برغر (3 لحم + 3 دجاج مقرمش)", nameEn: "6 Pieces (3 Beef + 3 Chicken)" },
-        { name: "12 ميني برغر (6 لحم + 6 دجاج مقرمش)", nameEn: "12 Pieces (6 Beef + 6 Chicken)" },
-        { name: "24 ميني برغر (12 لحم + 12 دجاج مقرمش)", nameEn: "24 Pieces (12 Beef + 12 Chicken)" }
+        { name: "6 قطع", nameEn: "6 pcs", price: 80 },
+        { name: "12 قطعة", nameEn: "12 pcs", price: 150 },
+        { name: "24 قطعة", nameEn: "24 pcs", price: 280 }
       ]
     }
   },
@@ -234,16 +230,17 @@ export const menuItems: MenuItem[] = [
     name: "ميني بيف بوكس",
     nameEn: "Mini Beef Box",
     category: "boxes",
-    description: "بوكس ميني برجر باللحم تقدم مع صوص جانبي.",
-    descriptionEn: "Box of mini beef burgers served with a side sauce.",
-    image: "/box-mini-beef.png",
+    price: 85,
+    description: "ميني برجر باللحم تقدم مع صوص جانبي",
+    descriptionEn: "Mini Beef Burgers with side sauce",
+    image: "/images/export (3)/ميني بيف بوكس (Mini Beef Box).png",
     options: {
-      label: "اختر حجم البوكس",
-      labelEn: "Select Box Size",
+      label: "اختر العدد",
+      labelEn: "Choose Quantity",
       items: [
-        { name: "6 ميني برغر لحم", nameEn: "6 Pieces Mini Beef Burgers" },
-        { name: "12 ميني برغر لحم", nameEn: "12 Pieces Mini Beef Burgers" },
-        { name: "24 ميني برغر لحم", nameEn: "24 Pieces Mini Beef Burgers" }
+        { name: "6 قطع", nameEn: "6 pcs", price: 85 },
+        { name: "12 قطعة", nameEn: "12 pcs", price: 160 },
+        { name: "24 قطعة", nameEn: "24 pcs", price: 300 }
       ]
     }
   },
@@ -252,16 +249,17 @@ export const menuItems: MenuItem[] = [
     name: "ميني كرنش بوكس",
     nameEn: "Mini Crunch Box",
     category: "boxes",
-    description: "بوكس ميني برجر بالدجاج المقرمش تقدم مع صوص جانبي.",
-    descriptionEn: "Box of mini crispy chicken burgers served with a side sauce.",
-    image: "/box-mini-crunch.png",
+    price: 85,
+    description: "ميني برجر بالدجاج المقرمش تقدم مع صوص جانبي",
+    descriptionEn: "Mini Crispy Chicken Burgers with side sauce",
+    image: "/images/export (3)/ميني كرنش بوكس (Mini Crunch Box).png",
     options: {
-      label: "اختر حجم البوكس",
-      labelEn: "Select Box Size",
+      label: "اختر العدد",
+      labelEn: "Choose Quantity",
       items: [
-        { name: "6 ميني برغر دجاج مقرمش", nameEn: "6 Pieces Mini Chicken Burgers" },
-        { name: "12 ميني برغر دجاج مقرمش", nameEn: "12 Pieces Mini Chicken Burgers" },
-        { name: "24 ميني برغر دجاج مقرمش", nameEn: "24 Pieces Mini Chicken Burgers" }
+        { name: "6 قطع", nameEn: "6 pcs", price: 85 },
+        { name: "12 قطعة", nameEn: "12 pcs", price: 160 },
+        { name: "24 قطعة", nameEn: "24 pcs", price: 300 }
       ]
     }
   },
@@ -272,16 +270,16 @@ export const menuItems: MenuItem[] = [
     name: "قطع جمبري مقرمش",
     nameEn: "Crispy Shrimp Bites",
     category: "bites",
-    description: "قطع جمبري مقرمش تقدم مع صوص جانبي.",
-    descriptionEn: "Crispy shrimp bites served with a side sauce.",
-    image: "/bites-shrimp.png",
+    price: 35,
+    description: "قطع جمبري مقرمش تقدم مع صوص جانبي",
+    descriptionEn: "Crispy shrimp pieces served with side sauce",
+    image: "/images/export (4)/Crispy Shrimp Bites.png",
     options: {
-      label: "عدد القطع",
-      labelEn: "Number of Pieces",
+      label: "اختر العدد",
+      labelEn: "Choose Quantity",
       items: [
-        { name: "6 قطع", nameEn: "6 Pieces" },
-        { name: "9 قطع", nameEn: "9 Pieces" },
-        { name: "12 قطعة", nameEn: "12 Pieces" }
+        { name: "6 قطع", nameEn: "6 pcs", price: 35 },
+        { name: "9 قطع", nameEn: "9 pcs", price: 50 }
       ]
     }
   },
@@ -290,16 +288,16 @@ export const menuItems: MenuItem[] = [
     name: "قطع كرسبي شيز",
     nameEn: "Crispy Cheese Bites",
     category: "bites",
-    description: "قطع جبن مقرمشة تقدم مع صوص جانبي.",
-    descriptionEn: "Crispy cheese bites served with a side sauce.",
-    image: "/bites-cheese.png",
+    price: 25,
+    description: "قطع جبن مقرمش تقدم مع صوص جانبي",
+    descriptionEn: "Crispy cheese pieces served with side sauce",
+    image: "/images/export (4)/Crispy Cheese Bites.png",
     options: {
-      label: "عدد القطع",
-      labelEn: "Number of Pieces",
+      label: "اختر العدد",
+      labelEn: "Choose Quantity",
       items: [
-        { name: "3 قطع", nameEn: "3 Pieces" },
-        { name: "6 قطع", nameEn: "6 Pieces" },
-        { name: "9 قطع", nameEn: "9 Pieces" }
+        { name: "3 قطع", nameEn: "3 pcs", price: 25 },
+        { name: "5 قطع", nameEn: "5 pcs", price: 35 }
       ]
     }
   },
@@ -308,34 +306,34 @@ export const menuItems: MenuItem[] = [
     name: "قطع كرسبي شكن",
     nameEn: "Crispy Chicken Bites",
     category: "bites",
-    description: "قطع صدور دجاج مقرمشة تقدم مع صوص جانبي.",
-    descriptionEn: "Crispy chicken breast chunks served with a side sauce.",
-    image: "/images/bites_chicken.png",
+    price: 30,
+    description: "قطع صدور دجاج مقرمش تقدم مع صوص جانبي",
+    descriptionEn: "Crispy chicken breast pieces served with side sauce",
+    image: "/images/export (4)/Crispy Chicken Bites.png",
     options: {
-      label: "عدد القطع",
-      labelEn: "Number of Pieces",
+      label: "اختر العدد",
+      labelEn: "Choose Quantity",
       items: [
-        { name: "3 قطع", nameEn: "3 Pieces" },
-        { name: "6 قطع", nameEn: "6 Pieces" },
-        { name: "9 قطع", nameEn: "9 Pieces" }
+        { name: "3 قطع", nameEn: "3 pcs", price: 30 },
+        { name: "5 قطع", nameEn: "5 pcs", price: 45 }
       ]
     }
   },
   {
     id: "bites-nuggets",
     name: "قطع كرسبي نيوغتس",
-    nameEn: "Crispy Nuggets",
+    nameEn: "Crispy Nuggets Bites",
     category: "bites",
-    description: "قطع نيوغتس دجاج مقرمشة تقدم مع صوص جانبي.",
-    descriptionEn: "Crispy chicken nuggets served with a side sauce.",
-    image: "/images/bites_nuggets.png",
+    price: 25,
+    description: "قطع نيوغتس مقرمش تقدم مع صوص جانبي",
+    descriptionEn: "Crispy nuggets pieces served with side sauce",
+    image: "/images/export (4)/Crispy Nuggets Bites.png",
     options: {
-      label: "عدد القطع",
-      labelEn: "Number of Pieces",
+      label: "اختر العدد",
+      labelEn: "Choose Quantity",
       items: [
-        { name: "6 قطع", nameEn: "6 Pieces" },
-        { name: "9 قطع", nameEn: "9 Pieces" },
-        { name: "12 قطعة", nameEn: "12 Pieces" }
+        { name: "6 قطع", nameEn: "6 pcs", price: 25 },
+        { name: "9 قطع", nameEn: "9 pcs", price: 35 }
       ]
     }
   },
@@ -344,73 +342,138 @@ export const menuItems: MenuItem[] = [
   {
     id: "pasta-alfredo",
     name: "باستا ألفريدو",
-    nameEn: "Pasta Alfredo",
+    nameEn: "Alfredo Pasta",
     category: "pasta",
-    ingredients: ["صلصة روزا الإيطالية", "قطع دجاج", "جبن بارميزان", "أوريغانو", "ريحان", "شرائح فطر"],
-    ingredientsEn: ["Italian Rosa Sauce", "Chicken Chunks", "Parmesan Cheese", "Oregano", "Basil", "Mushroom Slices"],
-    description: "باستا إيطالية فاخرة بصلصة روزا الغنية، الدجاج المشوي وشرائح الفطر الطازجة.",
-    descriptionEn: "Luxury Italian pasta with rich Rosa sauce, grilled chicken, and fresh mushroom slices.",
-    image: "/images/pasta_alfredo.png"
+    price: 45,
+    ingredients: ["صلصة روزا الإيطالية", "قطع دجاج", "جبن البرميزون", "أوريغانو", "ريحان", "شرائح الفطر"],
+    ingredientsEn: ["Italian Rosa Sauce", "Chicken Pieces", "Parmesan Cheese", "Oregano", "Basil", "Mushroom Slices"],
+    image: "/images/export (5)/باستا ألفريدو.png"
   },
   {
-    id: "pasta-trifoglio",
+    id: "pasta-truffle",
     name: "باستا دي تريفوليو",
-    nameEn: "Pasta di Trifoglio",
+    nameEn: "Di Tartufo Pasta",
     category: "pasta",
-    ingredients: ["صلصة الترافل الكريمية", "ريحان", "جبن بارميزان", "أوريغانو"],
+    price: 55,
+    ingredients: ["صلصة الترافل الكريمية", "ريحان", "جبن البرميزون", "أوريغانو"],
     ingredientsEn: ["Creamy Truffle Sauce", "Basil", "Parmesan Cheese", "Oregano"],
-    description: "باستا بصلصة الترافل الكريمية الفاخرة مع جبنة البارميزان وأوراق الريحان الطازجة.",
-    descriptionEn: "Pasta in premium creamy truffle sauce topped with parmesan cheese and fresh basil.",
-    image: "/images/pasta_trifoglio.png"
+    image: "/images/export (5)/باستا دي تارتوفو.png"
   },
   {
     id: "pasta-bolognese",
     name: "باستا بولوناز",
-    nameEn: "Pasta Bolognese",
+    nameEn: "Bolognese Pasta",
     category: "pasta",
-    ingredients: ["صلصة البولوناز الإيطالية", "لحم مفروم", "جبن بارميزان", "ريحان"],
-    ingredientsEn: ["Italian Bolognese Sauce", "Minced Beef", "Parmesan Cheese", "Basil"],
-    description: "الباستا الكلاسيكية بصلصة الطماطم واللحم المفروم والبهارات الإيطالية وجبن البارميزان.",
-    descriptionEn: "Classic pasta in rich tomato and minced beef Bolognese sauce, topped with parmesan.",
-    image: "/images/pasta_bolognese.png"
+    price: 48,
+    ingredients: ["صلصة البولوناز الإيطالية", "لحم مفروم", "جبن البرميزون", "ريحان"],
+    ingredientsEn: ["Italian Bolognese Sauce", "Minced Meat", "Parmesan Cheese", "Basil"],
+    image: "/images/export (5)/باستا بولونيز.png"
   },
   {
     id: "pasta-arrabbiata",
     name: "باستا لارابياتا",
-    nameEn: "Pasta l'Arrabbiata",
+    nameEn: "Arrabbiata Pasta",
     category: "pasta",
-    ingredients: ["صلصة الطماطم الإيطالية", "ريحان", "جبن بارميزان"],
+    price: 40,
+    ingredients: ["صلصة الطماطم الإيطالية", "ريحان", "جبن البرميزون"],
     ingredientsEn: ["Italian Tomato Sauce", "Basil", "Parmesan Cheese"],
-    description: "باستا بصلصة الطماطم الحارة مع الثوم والزيت والريحان والجبن المبشور.",
-    descriptionEn: "Spicy Italian pasta in hot tomato sauce with garlic, fresh basil, and parmesan.",
-    image: "/images/pasta_arrabbiata.png"
+    image: "/images/export (5)/باستا أرابياتا.png"
   },
 
   // --- SAUCES ---
-  { id: "sauce-cocktail", name: "صوص كوكتال", nameEn: "Cocktail Sauce", category: "sauces", image: "/images/sauce_cocktail.png" },
-  { id: "sauce-spicy", name: "صوص سبايسي", nameEn: "Spicy Sauce", category: "sauces", image: "/images/sauce_spicy.png" },
-  { id: "sauce-truffle", name: "صوص ترافل", nameEn: "Truffle Sauce", category: "sauces", image: "/images/sauce_truffle.png" },
-  { id: "sauce-italian", name: "صوص الجبن الإيطالية", nameEn: "Italian Cheese Sauce", category: "sauces", image: "/images/sauce_italian.png" },
-  { id: "sauce-bbq", name: "صوص بربيكيو", nameEn: "BBQ Sauce", category: "sauces", image: "/images/sauce_bbq.png" },
-  { id: "sauce-burger", name: "صوص برغر", nameEn: "Burger Sauce", category: "sauces", image: "/images/sauce_burger.png" },
-  { id: "sauce-biggie", name: "صوص بيجي", nameEn: "Biggie Sauce", category: "sauces", image: "/images/sauce_biggie.png" },
-  { id: "sauce-cheddar", name: "صوص شيدار", nameEn: "Cheddar Sauce", category: "sauces", image: "/images/sauce_cheddar.png" },
+  {
+    id: "sauce-cocktail",
+    name: "صوص كوكتال",
+    nameEn: "Cocktail Sauce",
+    category: "sauces",
+    price: 5,
+    image: "/images/export (6)/صوص كوكتال (Cocktail Sauce).png"
+  },
+  {
+    id: "sauce-truffle",
+    name: "صوص ترافل",
+    nameEn: "Truffle Sauce",
+    category: "sauces",
+    price: 7,
+    image: "/images/export (6)/صوص ترافل (Truffle Sauce).png"
+  },
+  {
+    id: "sauce-bbq",
+    name: "صوص بربيكيو",
+    nameEn: "BBQ Sauce",
+    category: "sauces",
+    price: 5,
+    image: "/images/export (6)/صوص بربيكيو (BBQ Sauce).png"
+  },
+  {
+    id: "sauce-biggy",
+    name: "صوص بيجي",
+    nameEn: "Biggy Sauce",
+    category: "sauces",
+    price: 5,
+    image: "/images/export (6)/صوص بيجي (Biggy Sauce).png"
+  },
+  {
+    id: "sauce-spicy",
+    name: "صوص سبايسي",
+    nameEn: "Spicy Sauce",
+    category: "sauces",
+    price: 5,
+    image: "/images/export (6)/صوص سبايسي (Spicy Sauce).png"
+  },
+  {
+    id: "sauce-italian-cheese",
+    name: "صوص الجبن الإيطالية",
+    nameEn: "Italian Cheese Sauce",
+    category: "sauces",
+    price: 6,
+    image: "/images/export (7)/صوص الجبن الإيطالية - Italian Cheese Sauce.png"
+  },
+  {
+    id: "sauce-burger",
+    name: "صوص برغر",
+    nameEn: "Burger Sauce",
+    category: "sauces",
+    price: 5,
+    image: "/images/export (7)/صوص برغر - Burger Sauce.png"
+  },
+  {
+    id: "sauce-cheddar",
+    name: "صوص شيدار",
+    nameEn: "Cheddar Sauce",
+    category: "sauces",
+    price: 5,
+    image: "/images/export (7)/صوص شيدار - Cheddar Sauce.png"
+  },
 
-  // --- SIDES ---
-  { id: "side-fries-small", name: "بطاطس صغير", nameEn: "Small French Fries", category: "sides", image: "/images/side_fries_small.png" },
-  { id: "side-fries-large", name: "بطاطس كبير", nameEn: "Large French Fries", category: "sides", image: "/images/side_fries_large.png" },
+  // --- EXTRAS ---
+  {
+    id: "extra-fries-small",
+    name: "بطاطس صغير",
+    nameEn: "Small Fries",
+    category: "extras",
+    price: 10,
+    image: "/images/export (7)/بطاطس صغير - Small Fries.png"
+  },
+  {
+    id: "extra-fries-large",
+    name: "بطاطس كبير",
+    nameEn: "Large Fries",
+    category: "extras",
+    price: 15,
+    image: "/images/export (7)/بطاطس كبير - Large Fries.png"
+  },
 
   // --- DRINKS ---
-  { id: "drink-coke-zero", name: "كوكا زيرو", nameEn: "Coca Zero", category: "drinks", image: "/images/drink_coca_zero.png" },
-  { id: "drink-sprite", name: "سبرايت", nameEn: "Sprite", category: "drinks", image: "/images/drink_sprite.png" },
-  { id: "drink-fanta", name: "فانتا", nameEn: "Fanta", category: "drinks", image: "/images/drink_fanta.png" },
-  { id: "drink-coca", name: "كوكاكولا", nameEn: "Coca Cola", category: "drinks", image: "/images/drink_coca.png" },
-  { id: "drink-pepsi", name: "بيبسي", nameEn: "Pepsi", category: "drinks", image: "/images/drink_pepsi.png" },
-  { id: "drink-water", name: "ماء 330ml", nameEn: "Water 330ml", category: "drinks", image: "/images/drink_water.png" },
+  { id: "drink-coca", name: "كوكاكولا", nameEn: "Coca Cola", category: "drinks", price: 6, image: "/images/export (8)/كوكاكولا.png" },
+  { id: "drink-coke-zero", name: "كوكازيرو", nameEn: "Coca Zero", category: "drinks", price: 6, image: "/images/export (8)/كوكازيرو.png" },
+  { id: "drink-sprite", name: "سبرايت", nameEn: "Sprite", category: "drinks", price: 6, image: "/images/export (8)/سبرايت.png" },
+  { id: "drink-fanta", name: "فنتا", nameEn: "Fanta", category: "drinks", price: 6, image: "/images/export (8)/فنتا.png" },
+  { id: "drink-pepsi", name: "بيبسي", nameEn: "Pepsi", category: "drinks", price: 6, image: "/images/export (9)/بيبسي Pepsi.png" },
+  { id: "drink-water", name: "ماء 330ml", nameEn: "Water 330ml", category: "drinks", price: 3, image: "/images/export (9)/ماء 330ml Water 330ml.png" },
 
   // --- DESSERTS ---
-  { id: "dessert-tiramisu", name: "تيراميسو", nameEn: "Tiramisu", category: "desserts", image: "/images/dessert_tiramisu.png" },
-  { id: "dessert-cookies-white", name: "كوكيز أبيض", nameEn: "White Chocolate Cookies", category: "desserts", image: "/images/dessert_cookies_white.png" },
-  { id: "dessert-cookies-choco", name: "كوكيز شوكولاتة", nameEn: "Chocolate Cookies", category: "desserts", image: "/images/dessert_cookies_choco.png" }
+  { id: "dessert-tiramisu", name: "تيراميسو", nameEn: "Tiramisu", category: "desserts", price: 28, image: "/images/export (9)/تيراميسو Tiramisu.png" },
+  { id: "dessert-cookies-white", name: "كوكيز أبيض", nameEn: "White Cookies", category: "desserts", price: 15, image: "/images/export (9)/كوكيز أبيض White Cookies.png" },
+  { id: "dessert-cookies-choco", name: "كوكيز شكلاطة", nameEn: "Chocolate Cookies", category: "desserts", price: 15, image: "/images/export (9)/كوكيز شكلاطة Chocolate Cookies.png" }
 ];
-
