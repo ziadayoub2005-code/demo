@@ -18,6 +18,15 @@ export interface MenuItem {
   price: number; 
   category: string;
   image?: string;
+  attributes?: {
+    id: number;
+    name: string;
+    values: {
+      id: number;
+      name: string;
+      price_extra: number;
+    }[];
+  }[];
 }
 
 export interface Category {

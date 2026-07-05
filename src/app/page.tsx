@@ -1,283 +1,204 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import MenuItemCard from "@/components/MenuItemCard";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import LogoSVG from "@/components/LogoSVG";
-import CartDrawer from "@/components/CartDrawer";
-import SuccessView from "@/components/SuccessView";
-import { categories, menuItems } from "@/data/menuData";
-import { useCart } from "@/context/CartContext";
+import Header from "@/components/Header";
+import MarqueeText from "@/components/MarqueeText";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function Home() {
   const [lang, setLang] = useState<"ar" | "en">("ar");
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [orderStatus, setOrderStatus] = useState<"menu" | "success">("menu");
-  
-  const { setTableNumber, tableNumber, totalItems } = useCart();
-
-  // Cinematic Intro Phases:
-  const [introPhase, setIntroPhase] = useState<"loading" | "transitioning" | "completed">("loading");
-
   const isRtl = lang === "ar";
 
-  // Sync document attributes
   useEffect(() => {
-    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.documentElement.dir = isRtl ? "rtl" : "ltr";
     document.documentElement.lang = lang;
-  }, [lang]);
+  }, [lang, isRtl]);
 
-  // Handle URL Table Parameter
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const table = params.get("table");
-    if (table) {
-      setTableNumber(table);
+  const containerVariants: any = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { staggerChildren: 0.3, delayChildren: 0.5 }
     }
-  }, [setTableNumber]);
-
-  // Handle scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Intro Timers
-  useEffect(() => {
-    const timer1 = setTimeout(() => setIntroPhase("transitioning"), 2500);
-    const timer2 = setTimeout(() => setIntroPhase("completed"), 3700);
-    return () => { clearTimeout(timer1); clearTimeout(timer2); };
-  }, []);
-
-  // Filter items
-  const filteredItems = menuItems.filter((item) => {
-    if (!searchQuery.trim()) return true;
-    const query = searchQuery.toLowerCase();
-    const nameMatch = item.name.toLowerCase().includes(query) || item.nameEn.toLowerCase().includes(query);
-    const descMatch = (item.description?.toLowerCase().includes(query)) || (item.descriptionEn?.toLowerCase().includes(query));
-    return nameMatch || descMatch;
-  });
-
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
-
-  const handleOrderSuccess = () => {
-    setOrderStatus("success");
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-black text-white relative bg-grid-dots pb-20 overflow-x-hidden">
-      
-      {/* CINEMATIC LOGO INTRO SCREEN */}
-      {introPhase !== "completed" && (
-        <div
-          className={`fixed inset-0 bg-black z-50 flex items-center justify-center transition-all duration-[1200ms] ease-in-out ${
-            introPhase === "transitioning" ? "bg-transparent pointer-events-none" : ""
-          }`}
-        >
-          <div className={`absolute w-96 h-96 md:w-[600px] md:h-[600px] rounded-full bg-white/10 blur-[110px] pointer-events-none transition-opacity duration-1000 ${
-            introPhase === "loading" ? "opacity-100 animate-pulse" : "opacity-0"
-          }`} />
+  const itemVariants: any = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  };
 
-          <div
-            className={`transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) transform ${
-              introPhase === "loading"
-                ? "scale-100 translate-y-0"
-                : "scale-[0.8] md:scale-[0.78] -translate-y-[calc(50vh-128px)] md:-translate-y-[calc(50vh-184px)]"
-            }`}
+  const marqueeText = isRtl 
+    ? "✦ تجربة برجر استثنائية ✦ باستا إيطالية بأجود أنواع الجبن ✦ لحوم طازجة يومياً ✦ أجواء فاخرة ✦" 
+    : "✦ EXCEPTIONAL BURGER EXPERIENCE ✦ ITALIAN PASTA WITH FINEST CHEESE ✦ FRESH MEAT DAILY ✦ PREMIUM ATMOSPHERE ✦";
+
+  return (
+    <div className="min-h-screen flex flex-col bg-[#050505] text-neutral-100 overflow-x-clip selection:bg-[#D4AF37] selection:text-black">
+      <Header lang={lang} setLang={setLang} />
+
+      {/* Hero Section */}
+      <section className="relative w-full h-[95vh] flex flex-col items-center justify-center overflow-hidden">
+        {/* Cinematic Video Background */}
+        <div className="absolute inset-0 z-0 bg-black">
+          <motion.video
+            initial={{ scale: 1.1, opacity: 0 }}
+            animate={{ scale: 1, opacity: 0.6 }}
+            transition={{ duration: 3, ease: "easeOut" }}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
           >
-            <LogoSVG
-              className="w-40 h-40 md:w-56 md:h-56 filter drop-shadow-[0_0_25px_rgba(255,255,255,0.4)]"
-              animate={introPhase === "loading"}
+            <source src="/hero-video.mp4" type="video/mp4" />
+          </motion.video>
+          
+          {/* Gradients to blend with background */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-black/40 to-[#050505]" />
+          
+          {/* Noise texture for premium grainy feel */}
+          <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "url('https://grainy-gradients.vercel.app/noise.svg')" }}></div>
+        </div>
+
+        {/* Hero Content */}
+        <motion.div 
+          className="relative z-10 flex flex-col items-center text-center px-4 w-full max-w-5xl mt-[-10vh]"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div variants={itemVariants} className="mb-8">
+            <LogoSVG className="w-32 h-32 md:w-48 md:h-48 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]" />
+          </motion.div>
+          
+          <motion.div variants={itemVariants} className="flex flex-col items-center gap-6 mb-12">
+            <h1 className="text-5xl md:text-8xl font-black uppercase tracking-[0.05em] md:tracking-[0.1em] text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500 leading-tight">
+              {isRtl ? "الفن في كل قضمة" : "Art in Every Bite"}
+            </h1>
+            <p className="text-sm md:text-xl text-neutral-400 font-light max-w-3xl leading-relaxed tracking-wider">
+              {isRtl 
+                ? "حيث تجتمع المكونات الفاخرة بالشغف لصنع تجربة طعام لا تُنسى في عالم بلاك وايت."
+                : "Where premium ingredients meet passion to create an unforgettable culinary experience."}
+            </p>
+          </motion.div>
+
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto">
+            <Link 
+              href="/menu" 
+              className="group relative flex items-center justify-center gap-4 px-12 py-5 bg-white text-black font-black uppercase tracking-[0.2em] rounded-full overflow-hidden transition-all duration-500 hover:scale-105 hover:bg-[#D4AF37] hover:shadow-[0_0_40px_rgba(212,175,55,0.3)]"
+            >
+              <span className="relative z-10 text-sm md:text-base">{isRtl ? "اطلب الآن" : "Order Now"}</span>
+              {isRtl ? <ArrowLeft className="w-5 h-5 relative z-10 group-hover:-translate-x-2 transition-transform duration-500" /> : <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-2 transition-transform duration-500" />}
+            </Link>
+          </motion.div>
+        </motion.div>
+
+      </section>
+
+      {/* Dramatic Categories Showcase */}
+      <section className="max-w-7xl mx-auto w-full py-32 px-4 md:px-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1 }}
+          className="text-center mb-20 flex flex-col items-center"
+        >
+          <span className="text-[#D4AF37] text-[10px] md:text-xs uppercase tracking-[0.5em] mb-6 block font-black">
+            {isRtl ? "القائمة المختارة" : "Curated Menu"}
+          </span>
+          <h2 className="text-4xl md:text-6xl font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-white">
+            {isRtl ? "اكتشف إبداعاتنا" : "Discover Creations"}
+          </h2>
+          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mt-8" />
+        </motion.div>
+
+        {/* Bento Grid Layout for Categories */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 h-[800px] md:h-[600px]">
+          {/* Main Large Category */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="group relative h-full w-full overflow-hidden rounded-3xl bg-neutral-900 cursor-pointer col-span-1"
+          >
+            <Link href={`/menu#category-section-1`} className="absolute inset-0 z-20" />
+            <div 
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] ease-out group-hover:scale-110 opacity-70 group-hover:opacity-100"
+              style={{ backgroundImage: `url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1200&auto=format&fit=crop')` }}
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent z-0" />
+            
+            <div className="absolute bottom-10 left-10 rtl:left-auto rtl:right-10 z-10 flex flex-col gap-3">
+              <div className="w-12 h-[2px] bg-[#D4AF37] transition-all duration-700 group-hover:w-24" />
+              <h3 className="text-4xl md:text-5xl font-black uppercase tracking-[0.15em] text-white">
+                {isRtl ? "البرجر" : "Burgers"}
+              </h3>
+              <p className="text-neutral-400 font-light text-sm tracking-widest max-w-[250px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 -translate-y-4 group-hover:translate-y-0">
+                {isRtl ? "أجود أنواع اللحوم الطازجة المجهزة يومياً" : "The finest fresh meat prepared daily"}
+              </p>
+            </div>
+          </motion.div>
+
+          <div className="grid grid-rows-2 gap-4 md:gap-6 h-full col-span-1">
+            {/* Top Right Category */}
+            <motion.div 
+              initial={{ opacity: 0, x: isRtl ? -30 : 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="group relative h-full w-full overflow-hidden rounded-3xl bg-neutral-900 cursor-pointer"
+            >
+              <Link href={`/menu#category-section-2`} className="absolute inset-0 z-20" />
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] ease-out group-hover:scale-110 opacity-70 group-hover:opacity-100"
+                style={{ backgroundImage: `url('https://images.unsplash.com/photo-1473093295043-cdd812d0e601?q=80&w=800&auto=format&fit=crop')` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent z-0" />
+              <div className="absolute bottom-8 left-8 rtl:left-auto rtl:right-8 z-10 flex flex-col gap-2">
+                <div className="w-8 h-[2px] bg-[#D4AF37] transition-all duration-700 group-hover:w-16" />
+                <h3 className="text-3xl font-black uppercase tracking-[0.15em] text-white">
+                  {isRtl ? "الباستا" : "Pasta"}
+                </h3>
+              </div>
+            </motion.div>
+
+            {/* Bottom Right Category */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="group relative h-full w-full overflow-hidden rounded-3xl bg-neutral-900 cursor-pointer"
+            >
+              <Link href={`/menu#category-section-3`} className="absolute inset-0 z-20" />
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] ease-out group-hover:scale-110 opacity-70 group-hover:opacity-100"
+                style={{ backgroundImage: `url('https://images.unsplash.com/photo-1561758033-d89a9ad46330?q=80&w=800&auto=format&fit=crop')` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent z-0" />
+              <div className="absolute bottom-8 left-8 rtl:left-auto rtl:right-8 z-10 flex flex-col gap-2">
+                <div className="w-8 h-[2px] bg-[#D4AF37] transition-all duration-700 group-hover:w-16" />
+                <h3 className="text-3xl font-black uppercase tracking-[0.15em] text-white">
+                  {isRtl ? "البوكسات" : "Boxes"}
+                </h3>
+              </div>
+            </motion.div>
           </div>
         </div>
-      )}
+      </section>
 
-      {/* Floating Language Switcher */}
-      <button
-        onClick={() => setLang(lang === "ar" ? "en" : "ar")}
-        className={`fixed top-6 right-6 rtl:right-auto rtl:left-6 z-40 px-4 py-2 rounded-full border border-neutral-800 text-[10px] font-black uppercase tracking-wider text-neutral-400 bg-black/90 backdrop-blur-md hover:text-white hover:border-white transition-all duration-500 shadow-lg ${
-          introPhase === "loading" ? "opacity-0 pointer-events-none" : "opacity-100"
-        }`}
-      >
-        {lang === "ar" ? "English" : "عربي"}
-      </button>
-
-      {/* Main Container */}
-      <main 
-        className={`flex-1 max-w-5xl mx-auto w-full px-6 pt-16 md:pt-24 z-10 transition-opacity duration-[1200ms] ease-out ${
-          introPhase === "loading" ? "opacity-0" : "opacity-100"
-        }`}
-      >
-        
-        {/* BRAND HERO SECTION */}
-        <section className="flex flex-col items-center justify-center text-center mb-12 select-none">
-          <div 
-            className={`w-32 h-32 md:w-44 md:h-44 relative mb-6 transition-opacity duration-300 ${
-              introPhase === "completed" ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <LogoSVG className="w-full h-full object-contain" />
-          </div>
-          
-          {/* Elegant Table Badge */}
-          {tableNumber && (
-            <div className="mb-4 inline-block border border-[#D4AF37]/50 bg-[#D4AF37]/10 text-[#D4AF37] px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest backdrop-blur-sm shadow-[0_0_15px_rgba(212,175,55,0.2)] animate-fadein">
-              {isRtl ? `أنت تطلب للطاولة رقم ${tableNumber}` : `You're ordering for Table ${tableNumber}`}
-            </div>
-          )}
-          
-          <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.35em] text-neutral-500 mt-2">
-            {isRtl ? "قائمة المأكولات الفاخرة" : "Premium Culinary Menu"}
-          </span>
-          <div className="w-12 h-[1px] bg-neutral-800 my-6" />
-        </section>
-
-        {orderStatus === "success" ? (
-          <SuccessView 
-            lang={lang} 
-            tableNumber={tableNumber} 
-            onReturnToMenu={() => setOrderStatus("menu")} 
-          />
-        ) : (
-          <>
-            {/* CENTRED SEARCH BAR */}
-            <section className="max-w-md mx-auto w-full mb-16">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={isRtl ? "ابحث في القائمة..." : "Search the menu..."}
-                  className="w-full px-6 py-3 bg-neutral-950 border border-neutral-900 focus:border-white rounded-full text-xs md:text-sm text-white placeholder-neutral-600 focus:outline-none transition-all duration-300 text-center"
-                  style={{ direction: isRtl ? "rtl" : "ltr" }}
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-5 top-1/2 -translate-y-1/2 text-[10px] text-neutral-500 hover:text-white font-black uppercase tracking-wider"
-                  >
-                    {isRtl ? "إلغاء" : "Clear"}
-                  </button>
-                )}
-              </div>
-            </section>
-
-            {searchQuery ? (
-              <section className="animate-slideup">
-                <div className="flex flex-col items-center justify-center mb-12 text-center select-none">
-                  <span className="text-[9px] font-black tracking-[0.4em] text-neutral-500 uppercase mb-2">
-                    {isRtl ? "البحث" : "Search"}
-                  </span>
-                  <h2 className="text-xl md:text-3xl font-black tracking-[0.2em] uppercase font-heading text-white border-y border-neutral-900 py-4 px-10 w-full max-w-md">
-                    {isRtl ? `نتائج البحث (${filteredItems.length})` : `Search Results (${filteredItems.length})`}
-                  </h2>
-                </div>
-
-                {filteredItems.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredItems.map((item) => (
-                      <MenuItemCard key={item.id} item={item} lang={lang} />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-24 border border-dashed border-neutral-900 rounded-2xl bg-neutral-950/40">
-                    <span className="text-3xl block mb-4">🔍</span>
-                    <p className="text-neutral-500 text-xs md:text-sm font-medium">
-                      {isRtl
-                        ? "لم نجد أي نتائج تطابق بحثك. جرب كلمات أخرى."
-                        : "No items match your search. Try using different keywords."}
-                    </p>
-                  </div>
-                )}
-              </section>
-            ) : (
-              <div className="flex flex-col gap-20 md:gap-28">
-                {categories.map((cat, idx) => {
-                  const catItems = menuItems.filter((item) => item.category === cat.id);
-                  if (catItems.length === 0) return null;
-
-                  return (
-                    <section key={cat.id} id={`category-section-${cat.id}`}>
-                      <div className="flex flex-col items-center justify-center mb-12 text-center select-none">
-                        <span className="text-[9px] font-black tracking-[0.4em] text-[#D4AF37] uppercase mb-2">
-                          {String(idx + 1).padStart(2, "0")} / {isRtl ? "قسم" : "Category"}
-                        </span>
-                        <h2 className="text-xl md:text-3xl font-black tracking-[0.2em] uppercase font-heading text-white border-y border-neutral-900 py-4 px-10 w-full max-w-md">
-                          {isRtl ? cat.name : cat.nameEn}
-                        </h2>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {catItems.map((item) => (
-                          <MenuItemCard key={item.id} item={item} lang={lang} />
-                        ))}
-                      </div>
-                    </section>
-                  );
-                })}
-              </div>
-            )}
-          </>
-        )}
-      </main>
-
-      {/* FOOTER */}
-      <footer className="w-full border-t border-neutral-900/60 py-12 mt-28 bg-neutral-950/20 relative z-10 text-neutral-500">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-right">
-          <div className="flex flex-col gap-1 md:items-start select-none">
-            <div className="w-16 h-16 relative mb-2 opacity-55">
-              <LogoSVG className="w-full h-full object-contain" />
-            </div>
-            <span className="text-xs font-light">
-              {isRtl ? "فن الطهو بلونين" : "Culinary art in black and white"}
-            </span>
-          </div>
-          
-          <div className="text-xs font-medium tracking-wide">
-            © {new Date().getFullYear()} {isRtl ? "جميع الحقوق محفوظة." : "All rights reserved."}
-          </div>
+      <footer className="w-full bg-black py-12 border-t border-neutral-900/50 mt-10">
+        <div className="max-w-7xl mx-auto px-6 text-center flex flex-col items-center">
+          <LogoSVG className="w-16 h-16 opacity-30 mb-6" />
+          <p className="text-neutral-600 text-xs font-black uppercase tracking-[0.3em]">
+            © {new Date().getFullYear()} Black White Restaurant
+          </p>
         </div>
       </footer>
-
-      {/* Floating Scroll To Top Button */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-6 right-6 rtl:right-auto rtl:left-6 z-30 bg-neutral-900 border border-neutral-800 text-white p-3 rounded-full hover:bg-neutral-800 transition-all duration-300"
-          aria-label="Scroll to top"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-          </svg>
-        </button>
-      )}
-
-      {/* Floating Cart Button */}
-      {totalItems > 0 && orderStatus !== "success" && introPhase === "completed" && (
-        <button
-          onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-6 left-6 rtl:left-auto rtl:right-6 z-40 bg-white text-black px-6 py-3 rounded-full font-black uppercase tracking-wider shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:bg-neutral-200 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-3 animate-slideup"
-        >
-          <span>{isRtl ? "السلة" : "Cart"}</span>
-          <span className="bg-black text-white w-6 h-6 flex items-center justify-center rounded-full text-xs">
-            {totalItems}
-          </span>
-        </button>
-      )}
-
-      {/* Cart Drawer */}
-      <CartDrawer 
-        isOpen={isCartOpen} 
-        onClose={() => setIsCartOpen(false)} 
-        lang={lang} 
-        onOrderSuccess={handleOrderSuccess}
-      />
     </div>
   );
 }

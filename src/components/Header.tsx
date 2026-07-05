@@ -1,91 +1,188 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Search, X, Globe, Menu } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import LogoSVG from "./LogoSVG";
 
 interface HeaderProps {
   lang: "ar" | "en";
   setLang: (lang: "ar" | "en") => void;
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
+  searchQuery?: string;
+  setSearchQuery?: (query: string) => void;
 }
 
 export default function Header({ lang, setLang, searchQuery, setSearchQuery }: HeaderProps) {
   const isRtl = lang === "ar";
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Prevent scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => { document.body.style.overflow = 'auto'; };
+  }, [isMobileMenuOpen]);
+
+  const navLinks = [
+    { href: "/", labelAr: "الرئيسية", labelEn: "Home" },
+    { href: "/menu", labelAr: "القائمة", labelEn: "Menu" },
+    { href: "/about", labelAr: "من نحن", labelEn: "About Us" },
+    { href: "/contact", labelAr: "تواصل", labelEn: "Contact" },
+  ];
 
   return (
-    <header className="w-full bg-black/90 backdrop-blur-md border-b border-neutral-900/60 sticky top-0 z-50 transition-all duration-300">
-      {/* Top subtle brand bar */}
-      <div className="w-full bg-neutral-950 border-b border-neutral-900/40 py-1.5 px-4 text-center">
-        <span className="text-[9px] font-black uppercase tracking-[0.25em] text-neutral-400">
-          {isRtl ? "✦ تجربة تذوق استثنائية بلونين ✦" : "✦ An Exceptional Two-Tone Culinary Experience ✦"}
-        </span>
-      </div>
+    <>
+      <header className="w-full bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between gap-4 relative">
+          
+          {/* Left Side: Language & Mobile Menu */}
+          <div className="flex items-center gap-4 md:gap-8 flex-1">
+            <button
+              onClick={() => setLang(lang === "ar" ? "en" : "ar")}
+              className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-neutral-400 hover:text-white transition-colors group"
+              aria-label="Toggle language"
+            >
+              <Globe className="w-4 h-4 group-hover:rotate-180 transition-transform duration-700" />
+              <span className="hidden md:inline">{lang === "ar" ? "English" : "العربية"}</span>
+            </button>
 
-      <div className="max-w-6xl mx-auto px-4 py-5 flex items-center justify-between gap-4">
-        {/* Left Side: Language Toggle (Minimal & Styled) */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setLang(lang === "ar" ? "en" : "ar")}
-            className="relative px-3.5 py-1.5 rounded-md border border-neutral-800 text-[10px] font-black uppercase tracking-wider text-neutral-400 hover:text-white hover:border-white transition-all duration-300 bg-neutral-950"
-            aria-label="Toggle language"
-            id="lang-toggle-desktop"
-          >
-            {lang === "ar" ? "English" : "عربي"}
-            {/* Tiny dot indicator */}
-            <span className="absolute -top-1 -right-1 flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-neutral-300"></span>
-            </span>
-          </button>
-        </div>
+            {/* Mobile Hamburger Menu */}
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="md:hidden flex items-center text-neutral-400 hover:text-white transition-colors"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
 
-        {/* Center: Branding & Logo */}
-        <div className="flex flex-col items-center justify-center text-center select-none absolute left-1/2 -translate-x-1/2">
-          <h1 className="text-xl md:text-2xl font-black tracking-[0.3em] font-heading text-white flex items-center gap-2 uppercase">
-            BLACK<span className="text-neutral-500 font-light">&</span>WHITE
-          </h1>
-          <p className="hidden md:block text-[9px] text-neutral-500 font-extrabold uppercase tracking-[0.35em] mt-1">
-            {isRtl ? "القائمة المحدودة الفاخرة" : "Exclusive Premium Menu"}
-          </p>
-        </div>
+          {/* Mobile Center Logo (Only visible on small screens) */}
+          <div className="md:hidden absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+            <Link href="/">
+              <LogoSVG className="w-12 h-auto" />
+            </Link>
+          </div>
 
-        {/* Right Side: Search bar (Beautiful & Expandable) */}
-        <div className="flex items-center justify-end w-40 md:w-64">
-          <div className="relative w-full">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setIsSearchFocused(true)}
-              onBlur={() => setIsSearchFocused(false)}
-              placeholder={isRtl ? "ابحث هنا..." : "Search..."}
-              className={`w-full px-3.5 py-1.5 bg-neutral-950 border rounded-md text-xs text-white placeholder-neutral-600 focus:outline-none transition-all duration-300 ${
-                isSearchFocused || searchQuery
-                  ? "border-white shadow-[0_0_15px_rgba(255,255,255,0.08)] md:w-64"
-                  : "border-neutral-800 hover:border-neutral-700"
-              }`}
-              style={{ direction: isRtl ? "rtl" : "ltr" }}
-              id="menu-search-input"
-            />
-            {searchQuery ? (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white text-[10px] font-black uppercase"
-                aria-label="Clear search"
+          {/* Center: Navigation Links (Desktop) */}
+          <nav className="hidden md:flex flex-shrink-0 items-center justify-center gap-8 text-xs font-black uppercase tracking-widest text-neutral-400">
+            {navLinks.map((link) => (
+              <Link 
+                key={link.href} 
+                href={link.href}
+                className={`relative hover:text-white transition-colors py-2 ${pathname === link.href ? "text-white" : ""}`}
               >
-                {isRtl ? "مسح" : "Clear"}
-              </button>
-            ) : (
-              <span className={`absolute top-1/2 -translate-y-1/2 text-neutral-600 pointer-events-none text-[11px] ${
-                isRtl ? "left-3" : "right-3"
-              }`}>
-                🔍
-              </span>
+                {isRtl ? link.labelAr : link.labelEn}
+                {pathname === link.href && (
+                  <motion.div 
+                    layoutId="header-underline"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#D4AF37]" 
+                  />
+                )}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Right Side: Search */}
+          <div className="flex-1 flex justify-end">
+            {setSearchQuery && typeof searchQuery !== 'undefined' && (
+              <div className={`relative transition-all duration-500 ease-out flex items-center bg-[#0a0a0a] rounded-full border ${isSearchFocused || searchQuery ? 'w-full md:w-64 border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.05)]' : 'w-8 h-8 md:w-48 md:h-auto md:py-2 border-white/5 hover:border-white/10'}`}>
+                <div className={`absolute pointer-events-none transition-opacity duration-300 ${isRtl ? 'right-2 md:right-3' : 'left-2 md:left-3'} ${isSearchFocused || searchQuery ? 'text-white' : 'text-neutral-500'}`}>
+                  <Search className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                </div>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}
+                  placeholder={isRtl ? "ابحث هنا..." : "Search..."}
+                  className={`w-full h-full bg-transparent text-xs text-white placeholder-neutral-600 focus:outline-none transition-all duration-300 ${isRtl ? 'pr-8 pl-3 md:pr-9' : 'pl-8 pr-3 md:pl-9'} ${(!isSearchFocused && !searchQuery) ? 'opacity-0 md:opacity-100 cursor-pointer md:cursor-text' : 'opacity-100'}`}
+                  style={{ direction: isRtl ? "rtl" : "ltr" }}
+                />
+                <AnimatePresence>
+                  {searchQuery && (
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      onClick={() => setSearchQuery("")}
+                      className={`absolute ${isRtl ? 'left-2 md:left-3' : 'right-2 md:right-3'} text-neutral-400 hover:text-white transition-colors`}
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </motion.button>
+                  )}
+                </AnimatePresence>
+              </div>
             )}
           </div>
+
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] md:hidden"
+            />
+            <motion.div
+              initial={{ x: isRtl ? "100%" : "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: isRtl ? "100%" : "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className={`fixed top-0 bottom-0 ${isRtl ? 'right-0 border-l' : 'left-0 border-r'} w-64 bg-[#050505] border-neutral-800 z-[70] p-6 flex flex-col md:hidden shadow-2xl`}
+            >
+              <div className="flex justify-between items-center mb-12">
+                <span className="font-black uppercase tracking-widest text-[#D4AF37] text-sm">
+                  {isRtl ? "القائمة" : "Menu"}
+                </span>
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-neutral-400 hover:text-white bg-neutral-900 p-2 rounded-full transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <nav className="flex flex-col gap-6">
+                {navLinks.map((link) => (
+                  <Link 
+                    key={link.href} 
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`text-sm font-black uppercase tracking-widest transition-all ${pathname === link.href ? "text-[#D4AF37] translate-x-2" : "text-neutral-400 hover:text-white"}`}
+                  >
+                    {isRtl ? link.labelAr : link.labelEn}
+                  </Link>
+                ))}
+              </nav>
+
+              <div className="mt-auto flex flex-col gap-4 border-t border-neutral-800 pt-6">
+                <button
+                  onClick={() => {
+                    setLang(lang === "ar" ? "en" : "ar");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-3 text-sm font-black uppercase tracking-widest text-neutral-400 hover:text-white transition-colors"
+                >
+                  <Globe className="w-4 h-4" />
+                  <span>{lang === "ar" ? "Switch to English" : "التبديل للعربية"}</span>
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

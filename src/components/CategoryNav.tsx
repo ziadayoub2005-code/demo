@@ -22,21 +22,14 @@ export default function CategoryNav({
   // Scroll active item into view inside the horizontal nav container
   useEffect(() => {
     const activeEl = containerRef.current?.querySelector(`[data-category-id="${activeCategory}"]`);
-    if (activeEl && containerRef.current) {
-      const container = containerRef.current;
-      const rect = activeEl.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-      
-      const scrollOffset = isRtl
-        ? (containerRect.right - rect.right) - (containerRect.width / 2) + (rect.width / 2)
-        : (rect.left - containerRect.left) - (containerRect.width / 2) + (rect.width / 2);
-        
-      container.scrollBy({
-        left: isRtl ? -scrollOffset : scrollOffset,
-        behavior: "smooth"
+    if (activeEl) {
+      activeEl.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest"
       });
     }
-  }, [activeCategory, isRtl]);
+  }, [activeCategory]);
 
   const handleCategoryClick = (id: string) => {
     setActiveCategory(id);
@@ -54,7 +47,7 @@ export default function CategoryNav({
   };
 
   return (
-    <div className="w-full bw-glass border-b border-neutral-900 sticky top-[72px] md:top-[88px] z-40 py-2.5 transition-all duration-300">
+    <div className="w-full bg-[#050505]/95 backdrop-blur-2xl border-b border-neutral-900 sticky top-[64px] z-40 py-3">
       <div className="max-w-6xl mx-auto px-4">
         <div
           ref={containerRef}

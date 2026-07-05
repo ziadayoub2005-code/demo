@@ -1,10 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { MenuItem } from "@/data/menuData";
+import { useCart } from "@/context/CartContext";
+import { X, Minus, Plus, ShoppingBag } from "lucide-react";
 
 interface ItemModalProps {
-  item: MenuItem | null;
+  item: MenuItem;
   isOpen: boolean;
   onClose: () => void;
   lang: "ar" | "en";
@@ -12,148 +16,199 @@ interface ItemModalProps {
 
 export default function ItemModal({ item, isOpen, onClose, lang }: ItemModalProps) {
   const isRtl = lang === "ar";
-  const [renderItem, setRenderItem] = useState<MenuItem | null>(item);
-  const [isClosing, setIsClosing] = useState(!isOpen);
+  const { addToCart } = useCart();
+  
+  const [quantity, setQuantity] = useState(1);
+  const [selectedOptions, setSelectedOptions] = useState<Record<number, number>>({});
 
-  // Sync state for exit animation
   useEffect(() => {
-    if (isOpen && item) {
-      setRenderItem(item);
-      setIsClosing(false);
-    } else if (!isOpen && renderItem) {
-      setIsClosing(true);
-      const timer = setTimeout(() => {
-        setRenderItem(null);
-      }, 400); // 400ms to match exit transition
-      return () => clearTimeout(timer);
+    if (isOpen) {
+      setQuantity(1);
+      setSelectedOptions({});
+      document.body.style.overflow = 'hidden';
     }
-  }, [isOpen, item, renderItem]);
-
-  // Prevent background scrolling when modal is open
-  useEffect(() => {
-    if (isOpen && !isClosing) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = 'unset';
     };
-  }, [isOpen, isClosing]);
+  }, [isOpen]);
 
-  if (!renderItem) return null;
+  const handleOptionSelect = (attrId: number, valId: number) => {
+    setSelectedOptions(prev => ({
+      ...prev,
+      [attrId]: valId
+    }));
+  };
 
-  const displayName = lang === "ar" ? renderItem.name : renderItem.nameEn;
-  const displayDescription = lang === "ar" ? renderItem.description : renderItem.descriptionEn;
-  const displayIngredients = lang === "ar" ? renderItem.ingredients : renderItem.ingredientsEn;
-  const displayOptions = renderItem.options; // use renderItem instead of item
+  const calculateTotal = () => {
+    let total = item.price;
+    if (item.attributes) {
+      item.attributes.forEach(attr => {
+        const selectedValId = selectedOptions[attr.id];
+        if (selectedValId) {
+          const val = attr.values.find(v => v.id === selectedValId);
+          if (val && val.price_extra) {
+            total += val.price_extra;
+          }
+        }
+      });
+    }
+    return total * quantity;
+  };
+
+  const handleAddToCart = () => {
+    const selectedAttributes = item.attributes?.map(attr => {
+      const selectedValId = selectedOptions[attr.id];
+      if (selectedValId) {
+        const val = attr.values.find(v => v.id === selectedValId);
+        return {
+          name: attr.name,
+          nameEn: attr.name,
+          price: val!.price_extra
+        };
+      }
+      return null;
+    }).filter(Boolean) as any[];
+
+    addToCart(item, quantity, "", selectedAttributes);
+    
+    onClose();
+  };
+
+  const displayName = isRtl ? item.name : item.nameEn;
+  let displayDescription = isRtl ? item.description : item.descriptionEn;
+  if (!displayDescription && item.ingredients && item.ingredients.length > 0) {
+    displayDescription = item.ingredients.join(" + ");
+  }
 
   return (
-    <div
-      className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md ${isClosing ? 'animate-fadeout' : 'animate-fadein'}`}
-      onClick={onClose}
-      id="item-details-modal-overlay"
-    >
-      <div
-        className={`relative w-full max-w-lg bg-neutral-950 border-t sm:border border-neutral-800 rounded-t-3xl sm:rounded-2xl max-h-[85vh] sm:max-h-none overflow-y-auto sm:overflow-visible shadow-[0_0_50px_rgba(255,255,255,0.06)] p-6 sm:p-8 ${isClosing ? 'animate-slidedown' : 'animate-slideup'}`}
-        onClick={(e) => e.stopPropagation()}
-        style={{ direction: isRtl ? "rtl" : "ltr" }}
-        id="item-details-modal"
-      >
-        {/* Mobile Pull Handle */}
-        <div className="w-12 h-1 bg-neutral-800 rounded-full mx-auto mb-5 sm:hidden" />
-
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 left-4 rtl:left-auto rtl:right-4 text-neutral-500 hover:text-white hover:bg-neutral-900 border border-transparent hover:border-neutral-800 p-2 rounded-full transition-all duration-200"
-          aria-label="Close modal"
-          id="close-modal-btn"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2.5}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        {/* Category Tag */}
-        <div className="mb-2 mt-2 sm:mt-4">
-          <span className="text-[10px] font-black uppercase tracking-widest text-neutral-500 border border-neutral-900 px-2.5 py-1 rounded bg-neutral-950">
-            {renderItem.category}
-          </span>
-        </div>
-
-        {/* Title */}
-        <h2 className="text-2xl md:text-3xl font-black font-heading text-white tracking-wide mb-3">
-          {displayName}
-        </h2>
-
-        {/* Description */}
-        {displayDescription && (
-          <p className="text-sm md:text-base text-neutral-400 font-light leading-relaxed mb-6">
-            {displayDescription}
-          </p>
-        )}
-
-        {/* Ingredients Section */}
-        {displayIngredients && displayIngredients.length > 0 && (
-          <div className="mb-6">
-            <h4 className="text-xs font-black uppercase tracking-widest text-neutral-400 mb-3 border-b border-neutral-900 pb-2">
-              {isRtl ? "المكونات الأساسية" : "Main Ingredients"}
-            </h4>
-            <ul className="grid grid-cols-2 gap-2 text-sm text-neutral-300 font-medium">
-              {displayIngredients.map((ing, i) => (
-                <li key={i} className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white flex-shrink-0" />
-                  <span>{ing}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Options / Pricing / Sizes Section */}
-        {displayOptions && (
-          <div className="mb-6">
-            <h4 className="text-xs font-black uppercase tracking-widest text-neutral-400 mb-3 border-b border-neutral-900 pb-2">
-              {isRtl ? displayOptions.label : displayOptions.labelEn}
-            </h4>
-            <div className="flex flex-col gap-2">
-              {displayOptions.items.map((opt, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between p-3 rounded-lg border border-neutral-900 bg-neutral-950/40 hover:border-neutral-800 transition-colors duration-200"
-                >
-                  <span className="text-sm text-neutral-200 font-semibold">
-                    {lang === "ar" ? opt.name : opt.nameEn}
-                  </span>
-                  {opt.price && (
-                    <span className="text-sm text-white font-extrabold font-heading">
-                      {opt.price}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Close CTA */}
-        <div className="mt-8 flex justify-end">
-          <button
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={onClose}
-            className="w-full md:w-auto px-6 py-3 bg-white text-black font-extrabold text-sm rounded-lg hover:bg-neutral-200 transition-all duration-300 uppercase tracking-wider"
-            id="modal-close-confirm-btn"
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+          />
+          
+          <motion.div 
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="relative w-full max-w-lg max-h-[90vh] bg-[#0a0a0a] border border-neutral-800 rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col z-10"
           >
-            {isRtl ? "إغلاق" : "Close"}
-          </button>
+            {/* Image Header */}
+            <div className="relative w-full h-64 bg-black flex-shrink-0">
+              {item.image ? (
+                <Image
+                  src={item.image}
+                  alt={displayName}
+                  fill
+                  unoptimized={true}
+                  className="object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="text-neutral-700 tracking-widest uppercase text-sm">
+                    {isRtl ? "لا توجد صورة" : "No Image"}
+                  </span>
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+              
+              <button 
+                onClick={onClose}
+                className="absolute top-4 right-4 rtl:right-auto rtl:left-4 bg-black/50 backdrop-blur-md text-white p-2 rounded-full border border-white/10 hover:bg-white hover:text-black transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-neutral-800">
+              <h2 className="text-2xl md:text-3xl font-black uppercase tracking-wider text-white mb-2">
+                {displayName}
+              </h2>
+              {displayDescription && (
+                <p className="text-neutral-400 text-sm leading-relaxed font-light mb-8">
+                  {displayDescription}
+                </p>
+              )}
+
+              {item.attributes && item.attributes.length > 0 && (
+                <div className="space-y-8 mb-8">
+                  {item.attributes.map((attr) => (
+                    <div key={attr.id} className="flex flex-col gap-3">
+                      <div className="flex items-center justify-between border-b border-neutral-900 pb-2">
+                        <h4 className="font-bold uppercase tracking-widest text-[#D4AF37] text-sm">
+                          {attr.name}
+                        </h4>
+                        <span className="text-[10px] uppercase tracking-widest text-neutral-500 bg-neutral-900 px-2 py-1 rounded">
+                          {isRtl ? "اختر" : "Select"}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        {attr.values.map((val) => {
+                          const isSelected = selectedOptions[attr.id] === val.id;
+                          return (
+                            <button
+                              key={val.id}
+                              onClick={() => handleOptionSelect(attr.id, val.id)}
+                              className={`flex flex-col p-3 rounded-xl border text-start transition-all duration-300 ${
+                                isSelected 
+                                  ? "border-[#D4AF37] bg-[#D4AF37]/10" 
+                                  : "border-neutral-800 bg-neutral-900 hover:border-neutral-700"
+                              }`}
+                            >
+                              <span className={`text-sm font-bold ${isSelected ? "text-white" : "text-neutral-300"}`}>
+                                {val.name}
+                              </span>
+                              {val.price_extra > 0 && (
+                                <span className="text-xs text-neutral-500 mt-1">
+                                  +{val.price_extra} {isRtl ? "ر.س" : "SAR"}
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Footer Action */}
+            <div className="p-6 bg-[#050505] border-t border-neutral-900 flex items-center gap-4">
+              <div className="flex items-center gap-4 bg-neutral-900 rounded-full px-2 py-1">
+                <button 
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white hover:bg-neutral-800 transition-colors"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <span className="font-black w-4 text-center">{quantity}</span>
+                <button 
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white hover:bg-neutral-800 transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+
+              <button 
+                onClick={handleAddToCart}
+                className="flex-1 flex items-center justify-center gap-2 bg-[#D4AF37] text-black py-4 rounded-full font-black uppercase tracking-widest text-sm hover:bg-white transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <ShoppingBag className="w-4 h-4" />
+                {isRtl ? "إضافة" : "Add"} • {calculateTotal()} {isRtl ? "ر.س" : "SAR"}
+              </button>
+            </div>
+          </motion.div>
         </div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 }
