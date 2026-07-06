@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
 import ItemModal from "@/components/ItemModal";
-import CartDrawer from "@/components/CartDrawer";
 import SuccessView from "@/components/SuccessView";
 import Header from "@/components/Header";
 import CategoryNav from "@/components/CategoryNav";
@@ -17,10 +16,9 @@ export default function MenuPage() {
   const [lang, setLang] = useState<"ar" | "en">("ar");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [orderStatus, setOrderStatus] = useState<"menu" | "success">("menu");
   
-  const { setTableNumber, tableNumber, totalItems } = useCart();
+  const { setTableNumber, tableNumber, totalItems, isCartOpen, setIsCartOpen } = useCart();
 
   const [categories, setCategories] = useState<Category[]>(staticCategories);
   const [menuItems, setMenuItems] = useState<MenuItem[]>(staticMenuItems);
@@ -80,6 +78,53 @@ export default function MenuPage() {
     }
   }, [setTableNumber]);
 
+  // Smooth scroll to category section based on URL hash (e.g. from homepage category cards)
+  useEffect(() => {
+    if (!isLoading && typeof window !== "undefined" && window.location.hash) {
+      const hash = window.location.hash;
+      const id = decodeURIComponent(hash.replace("#", ""));
+      
+      setTimeout(() => {
+        // 1. Try exact match
+        let element = document.getElementById(id);
+        
+        // 2. If not found and it matches category-section-X (where X is 1-based index or slug)
+        if (!element && id.startsWith("category-section-")) {
+          const suffix = id.replace("category-section-", "").toLowerCase();
+          const index = parseInt(suffix, 10);
+          
+          if (!isNaN(index)) {
+            const allSections = document.querySelectorAll('[id^="category-section-"]');
+            if (allSections && allSections[index - 1]) {
+              element = allSections[index - 1] as HTMLElement;
+            }
+          } else {
+            // Map English slugs to Arabic Odoo category names
+            const arKeywords: Record<string, string[]> = {
+              burgers: ["برجر", "البرجر", "burger"],
+              pasta: ["باستا", "الباستا", "pasta"],
+              boxes: ["بوكس", "بوكسات", "البوكسات", "box"],
+            };
+
+            const matchedCat = categories.find(c => {
+              const catName = c.name.toLowerCase();
+              const keywords = arKeywords[suffix] || [suffix];
+              return c.id.toLowerCase() === suffix || keywords.some(k => catName.includes(k));
+            });
+
+            if (matchedCat) {
+              element = document.getElementById(`category-section-${matchedCat.id}`);
+            }
+          }
+        }
+
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 600);
+    }
+  }, [isLoading, categories]);
+
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
@@ -131,9 +176,17 @@ export default function MenuPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#050505] text-white relative pb-24 overflow-x-clip selection:bg-[#D4AF37] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#000000] text-white relative pb-24 overflow-x-clip selection:bg-[#D4AF37] selection:text-black">
       
-      <Header lang={lang} setLang={setLang} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      {/* Decorative premium ambient glow background elements */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-[#D4AF37]/8 rounded-full blur-[150px] opacity-70" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-white/5 rounded-full blur-[150px] opacity-70" />
+        <div className="absolute top-[40%] left-[20%] w-[35vw] h-[35vw] bg-[#D4AF37]/4 rounded-full blur-[130px] opacity-60" />
+        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "url('https://grainy-gradients.vercel.app/noise.svg')" }}></div>
+      </div>
+
+      <Header lang={lang} setLang={setLang} searchQuery={searchQuery} setSearchQuery={setSearchQuery} onOrderSuccess={handleOrderSuccess} />
 
       {/* Sticky Category Nav */}
       {!isLoading && !searchQuery && orderStatus === "menu" && (
@@ -274,13 +327,6 @@ export default function MenuPage() {
           </div>
         </motion.button>
       )}
-
-      <CartDrawer 
-        isOpen={isCartOpen} 
-        onClose={() => setIsCartOpen(false)} 
-        lang={lang} 
-        onOrderSuccess={handleOrderSuccess}
-      />
 
       {selectedItem && (
         <ItemModal

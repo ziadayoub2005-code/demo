@@ -15,6 +15,8 @@ export type OrderType = "dine_in" | "takeaway" | "delivery";
 export type PaymentMethod = "cash_on_delivery" | "online";
 
 interface CartContextType {
+  isCartOpen: boolean;
+  setIsCartOpen: (open: boolean) => void;
   cart: CartItem[];
   customerNote: string;
   setCustomerNote: (note: string) => void;
@@ -42,6 +44,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [customerNote, setCustomerNote] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -117,6 +120,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   return (
     <CartContext.Provider
       value={{
+        isCartOpen,
+        setIsCartOpen,
         cart,
         customerNote,
         setCustomerNote,

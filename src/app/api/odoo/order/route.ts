@@ -116,6 +116,7 @@ export async function POST(req: NextRequest) {
         price_unit: unitPrice,
         price_subtotal: subtotal,
         price_subtotal_incl: subtotal,
+        note: description,
         customer_note: description,
       }];
     });
@@ -127,7 +128,9 @@ export async function POST(req: NextRequest) {
     if (payload.customer_note) orderNote += `ملاحظات العميل: ${payload.customer_note}\n`;
 
     if (orderLines.length > 0) {
-      orderLines[0][2].customer_note = (orderLines[0][2].customer_note ? orderLines[0][2].customer_note + "\n\n" : "") + "--- معلومات الطلب ---\n" + orderNote;
+      const combinedNote = (orderLines[0][2].customer_note ? orderLines[0][2].customer_note + "\n\n" : "") + "--- معلومات الطلب ---\n" + orderNote;
+      orderLines[0][2].customer_note = combinedNote;
+      orderLines[0][2].note = combinedNote;
     }
 
     // 6. Create the POS Order in Odoo

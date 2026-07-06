@@ -35,7 +35,16 @@ export default function Home() {
     : "✦ EXCEPTIONAL BURGER EXPERIENCE ✦ ITALIAN PASTA WITH FINEST CHEESE ✦ FRESH MEAT DAILY ✦ PREMIUM ATMOSPHERE ✦";
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#050505] text-neutral-100 overflow-x-clip selection:bg-[#D4AF37] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#000000] text-neutral-100 overflow-x-clip selection:bg-[#D4AF37] selection:text-black">
+      
+      {/* Decorative premium ambient glow background elements */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[-10%] right-[-10%] w-[80vw] md:w-[50vw] h-[80vw] md:h-[50vw] bg-[#D4AF37]/15 rounded-full blur-[100px] md:blur-[150px] opacity-90 md:opacity-80" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[80vw] md:w-[50vw] h-[80vw] md:h-[50vw] bg-white/10 rounded-full blur-[100px] md:blur-[150px] opacity-90 md:opacity-80" />
+        <div className="absolute top-[40%] left-[10%] w-[60vw] md:w-[35vw] h-[60vw] md:h-[35vw] bg-[#D4AF37]/10 rounded-full blur-[80px] md:blur-[130px] opacity-80 md:opacity-70" />
+        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "url('https://grainy-gradients.vercel.app/noise.svg')" }}></div>
+      </div>
+
       <Header lang={lang} setLang={setLang} />
 
       {/* Hero Section */}
@@ -44,19 +53,20 @@ export default function Home() {
         <div className="absolute inset-0 z-0 bg-black">
           <motion.video
             initial={{ scale: 1.1, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.6 }}
+            animate={{ scale: 1, opacity: 0.8 }}
             transition={{ duration: 3, ease: "easeOut" }}
             autoPlay
             loop
             muted
             playsInline
-            className="w-full h-full object-cover"
+            poster="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1200&auto=format&fit=crop"
+            className="w-full h-full object-cover opacity-80 md:opacity-60"
           >
             <source src="/hero-video.mp4" type="video/mp4" />
           </motion.video>
           
           {/* Gradients to blend with background */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-black/40 to-[#050505]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-transparent to-black/30" />
           
           {/* Noise texture for premium grainy feel */}
           <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "url('https://grainy-gradients.vercel.app/noise.svg')" }}></div>
@@ -70,7 +80,7 @@ export default function Home() {
           animate="visible"
         >
           <motion.div variants={itemVariants} className="mb-8">
-            <LogoSVG className="w-32 h-32 md:w-48 md:h-48 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]" />
+            <LogoSVG className="w-36 h-36 md:w-56 md:h-56 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]" />
           </motion.div>
           
           <motion.div variants={itemVariants} className="flex flex-col items-center gap-6 mb-12">
@@ -116,21 +126,21 @@ export default function Home() {
         </motion.div>
 
         {/* Bento Grid Layout for Categories */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 h-[800px] md:h-[600px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 h-auto md:h-[600px]">
           {/* Main Large Category */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="group relative h-full w-full overflow-hidden rounded-3xl bg-neutral-900 cursor-pointer col-span-1"
+            className="group relative h-72 md:h-full w-full overflow-hidden rounded-3xl bg-neutral-900 cursor-pointer col-span-1"
           >
-            <Link href={`/menu#category-section-1`} className="absolute inset-0 z-20" />
+            <Link href={`/menu#category-section-burgers`} className="absolute inset-0 z-20" />
             <div 
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] ease-out group-hover:scale-110 opacity-70 group-hover:opacity-100"
+               className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] ease-out group-hover:scale-110 opacity-70 group-hover:opacity-100"
               style={{ backgroundImage: `url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1200&auto=format&fit=crop')` }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent z-0" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/40 to-transparent z-0" />
             
             <div className="absolute bottom-10 left-10 rtl:left-auto rtl:right-10 z-10 flex flex-col gap-3">
               <div className="w-12 h-[2px] bg-[#D4AF37] transition-all duration-700 group-hover:w-24" />
@@ -143,21 +153,21 @@ export default function Home() {
             </div>
           </motion.div>
 
-          <div className="grid grid-rows-2 gap-4 md:gap-6 h-full col-span-1">
+          <div className="grid grid-rows-2 gap-4 md:gap-6 h-auto md:h-full col-span-1">
             {/* Top Right Category */}
             <motion.div 
               initial={{ opacity: 0, x: isRtl ? -30 : 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="group relative h-full w-full overflow-hidden rounded-3xl bg-neutral-900 cursor-pointer"
+              className="group relative h-72 md:h-full w-full overflow-hidden rounded-3xl bg-neutral-900 cursor-pointer"
             >
-              <Link href={`/menu#category-section-2`} className="absolute inset-0 z-20" />
+              <Link href={`/menu#category-section-pasta`} className="absolute inset-0 z-20" />
               <div 
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] ease-out group-hover:scale-110 opacity-70 group-hover:opacity-100"
                 style={{ backgroundImage: `url('https://images.unsplash.com/photo-1473093295043-cdd812d0e601?q=80&w=800&auto=format&fit=crop')` }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent z-0" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/40 to-transparent z-0" />
               <div className="absolute bottom-8 left-8 rtl:left-auto rtl:right-8 z-10 flex flex-col gap-2">
                 <div className="w-8 h-[2px] bg-[#D4AF37] transition-all duration-700 group-hover:w-16" />
                 <h3 className="text-3xl font-black uppercase tracking-[0.15em] text-white">
@@ -172,14 +182,14 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="group relative h-full w-full overflow-hidden rounded-3xl bg-neutral-900 cursor-pointer"
+              className="group relative h-72 md:h-full w-full overflow-hidden rounded-3xl bg-neutral-900 cursor-pointer"
             >
-              <Link href={`/menu#category-section-3`} className="absolute inset-0 z-20" />
+              <Link href={`/menu#category-section-boxes`} className="absolute inset-0 z-20" />
               <div 
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-[2s] ease-out group-hover:scale-110 opacity-70 group-hover:opacity-100"
                 style={{ backgroundImage: `url('https://images.unsplash.com/photo-1561758033-d89a9ad46330?q=80&w=800&auto=format&fit=crop')` }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent z-0" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/40 to-transparent z-0" />
               <div className="absolute bottom-8 left-8 rtl:left-auto rtl:right-8 z-10 flex flex-col gap-2">
                 <div className="w-8 h-[2px] bg-[#D4AF37] transition-all duration-700 group-hover:w-16" />
                 <h3 className="text-3xl font-black uppercase tracking-[0.15em] text-white">

@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MenuItem } from "@/data/menuData";
 import { useCart } from "@/context/CartContext";
 import { X, Minus, Plus, ShoppingBag } from "lucide-react";
+import SaudiRiyalIcon from "./SaudiRiyalIcon";
 
 interface ItemModalProps {
   item: MenuItem;
@@ -166,8 +167,9 @@ export default function ItemModal({ item, isOpen, onClose, lang }: ItemModalProp
                                 {val.name}
                               </span>
                               {val.price_extra > 0 && (
-                                <span className="text-xs text-neutral-500 mt-1">
-                                  +{val.price_extra} {isRtl ? "ر.س" : "SAR"}
+                                <span className="text-xs text-neutral-500 mt-1 flex items-center gap-1">
+                                  <span>+{val.price_extra}</span>
+                                  <SaudiRiyalIcon className="w-2 h-2.5 text-white" />
                                 </span>
                               )}
                             </button>
@@ -203,7 +205,10 @@ export default function ItemModal({ item, isOpen, onClose, lang }: ItemModalProp
                 className="flex-1 flex items-center justify-center gap-2 bg-[#D4AF37] text-black py-4 rounded-full font-black uppercase tracking-widest text-sm hover:bg-white transition-all transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 <ShoppingBag className="w-4 h-4" />
-                {isRtl ? "إضافة" : "Add"} • {calculateTotal()} {isRtl ? "ر.س" : "SAR"}
+                <span className="flex items-center gap-1.5 justify-center">
+                  <span>{isRtl ? "إضافة" : "Add"} • {calculateTotal()}</span>
+                  <SaudiRiyalIcon className="w-2.5 h-3 text-black" />
+                </span>
               </button>
             </div>
           </motion.div>

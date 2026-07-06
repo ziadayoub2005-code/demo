@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { MenuItem } from "@/data/menuData";
 import { Plus } from "lucide-react";
+import SaudiRiyalIcon from "./SaudiRiyalIcon";
 
 interface MenuItemCardProps {
   item: MenuItem;
@@ -28,7 +29,7 @@ export default function MenuItemCard({ item, lang, onOpen }: MenuItemCardProps) 
     <>
       <motion.div
         whileHover={{ y: -8 }}
-        className="group relative flex flex-col bg-[#0a0a0a] border border-neutral-900 rounded-3xl overflow-hidden transition-all duration-500 hover:border-neutral-700 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] cursor-pointer h-full"
+        className="group relative flex flex-col bg-[#0a0a0a] border border-neutral-900 rounded-3xl overflow-hidden transition-all duration-500 hover:border-[#D4AF37]/50 hover:shadow-[0_0_30px_rgba(212,175,55,0.15)] cursor-pointer h-full"
         id={`item-card-${item.id}`}
         onClick={onOpen}
       >
@@ -47,8 +48,9 @@ export default function MenuItemCard({ item, lang, onOpen }: MenuItemCardProps) 
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
             
             {/* Price Badge - Floating and Chic */}
-            <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-1.5 rounded-full text-xs font-bold tracking-widest shadow-xl">
-              {currentPrice} {isRtl ? "ر.س" : "SAR"}
+            <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-1.5 rounded-full text-xs font-bold tracking-widest shadow-xl flex items-center gap-1.5">
+              <span>{currentPrice}</span>
+              <SaudiRiyalIcon className="w-2.5 h-3 text-white" />
             </div>
           </div>
         ) : (
@@ -66,7 +68,7 @@ export default function MenuItemCard({ item, lang, onOpen }: MenuItemCardProps) 
               {displayName}
             </h3>
             {displayDescription && (
-              <p className="text-xs text-neutral-400 font-light leading-relaxed mt-2 line-clamp-2">
+              <p className="text-xs text-neutral-300 font-light leading-relaxed mt-2 line-clamp-2">
                 {displayDescription}
               </p>
             )}
@@ -74,8 +76,9 @@ export default function MenuItemCard({ item, lang, onOpen }: MenuItemCardProps) 
 
           <div className="mt-auto flex items-center justify-between">
             {!item.image && (
-               <div className="font-bold text-sm tracking-widest text-[#D4AF37]">
-                 {currentPrice} {isRtl ? "ر.س" : "SAR"}
+               <div className="font-bold text-sm tracking-widest text-[#D4AF37] flex items-center gap-1.5">
+                 <span>{currentPrice}</span>
+                 <SaudiRiyalIcon className="w-2.5 h-3 text-white" />
                </div>
             )}
             

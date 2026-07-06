@@ -28,7 +28,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#050505] text-neutral-100 overflow-x-clip selection:bg-[#D4AF37] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#000000] text-neutral-100 overflow-x-clip selection:bg-[#D4AF37] selection:text-black">
       <Header lang={lang} setLang={setLang} />
 
       {/* Decorative background elements */}

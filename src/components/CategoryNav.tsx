@@ -47,7 +47,7 @@ export default function CategoryNav({
   };
 
   return (
-    <div className="w-full bg-[#050505]/95 backdrop-blur-2xl border-b border-neutral-900 sticky top-[64px] z-40 py-3">
+    <div className="w-full bg-[#000000]/95 backdrop-blur-2xl border-b border-neutral-900 sticky top-[64px] z-40 py-3">
       <div className="max-w-6xl mx-auto px-4">
         <div
           ref={containerRef}

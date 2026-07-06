@@ -15,7 +15,7 @@ export default function AboutPage() {
   }, [lang, isRtl]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#050505] text-neutral-100 overflow-x-clip selection:bg-[#D4AF37] selection:text-black">
+    <div className="min-h-screen flex flex-col bg-[#000000] text-neutral-100 overflow-x-clip selection:bg-[#D4AF37] selection:text-black">
       <Header lang={lang} setLang={setLang} />
 
       <main className="flex-grow pt-32 pb-24 px-4 md:px-8 max-w-7xl mx-auto w-full">
@@ -63,7 +63,7 @@ export default function AboutPage() {
               className="absolute inset-0 bg-cover bg-center opacity-80"
               style={{ backgroundImage: `url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1000&auto=format&fit=crop')` }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#000000] to-transparent opacity-80" />
             <div className="absolute bottom-8 left-8 right-8 text-center flex flex-col items-center">
                <LogoSVG className="w-16 h-16 opacity-50 mb-4" />
                <p className="text-white font-black tracking-widest uppercase text-lg">Black White</p>
