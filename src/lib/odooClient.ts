@@ -25,7 +25,10 @@ export async function authenticateOdoo() {
   try {
     const authRes = await fetch(`${ODOO_URL}/web/session/authenticate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": "true"
+      },
       body: JSON.stringify(authPayload),
       cache: "no-store",
     });
@@ -58,6 +61,7 @@ export async function odooCall(model: string, method: string, args: any[] = [], 
     headers: {
       "Content-Type": "application/json",
       Cookie: sessionId,
+      "ngrok-skip-browser-warning": "true"
     },
     body: JSON.stringify(payload),
     cache: "no-store",
